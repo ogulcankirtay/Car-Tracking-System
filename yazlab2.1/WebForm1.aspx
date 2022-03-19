@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="yazlab2._1.WebForm1" %>
+﻿<%@ Page Language="C#"  AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="yazlab2._1.WebForm1" %>
 
 <!--
 Author: W3layouts
@@ -32,9 +32,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<asp:TextBox ID="TextBox1" runat="server" PlaceHolder="Kullanıcı Adı" ></asp:TextBox>
 					<asp:TextBox ID="TextBox2" runat="server" PlaceHolder="Şifre" TextMode="Password" ></asp:TextBox>
 					<div style="margin-top:15px">
-		<asp:Button ID="Button1" runat="server" Text="Giriş yap" OnClick="Button1_Click" />
+		<asp:Button ID="Button1" runat="server" Text="Giriş yap" OnClick="Button1_Click" AutoPostback = "false" />
 					</div>
-				
+				  <asp:HiddenField ID="HiddenField2" runat="server" />
 				</form>
 			</div>
 		  <div class="clear"> </div>

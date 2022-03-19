@@ -7,8 +7,10 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 namespace yazlab2._1
 {
+    
     public partial class WebForm1 : System.Web.UI.Page
     {
+        int i = 1;    
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -23,15 +25,23 @@ namespace yazlab2._1
             komut.Parameters.AddWithValue("@P1",TextBox1.Text);
             komut.Parameters.AddWithValue("@P2", TextBox2.Text);
             SqlDataReader dr = komut.ExecuteReader();
+          
             if (dr.Read())
             {
               
                 Response.Redirect("Veriler.Aspx?ad="+x);
             }
+            else if (HiddenField2.Value.Length>2)
+            {
+               
+                
+                Response.Write("<script>alert('hatalı giriş')</script>");
+               
+            }
             else
             {
-
-                Response.Write("Hatalı giriş");
+                Response.Write("" + i);
+                HiddenField2.Value += "1";
             }
             baglanti.Close();   
         }

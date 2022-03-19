@@ -31,9 +31,11 @@
 
      
             var data = document.getElementById('<%=HiddenField1.ClientID%>').value;
-            const myArrayx = data.split(" ");
+            const x = data.replaceAll(",", ".");
+            const myArrayx = x.split(" ");
             var data = document.getElementById('<%=HiddenField2.ClientID%>').value;
-            const myArrayy = data.split(" ");
+            const y = data.replaceAll(",", ".");
+            const myArrayy = y.split(" ");
             //const myArrayx=[37.5080508];
             //const myArrayy=[33.9787605];
             for (var i = 0; i < myArrayx.length; i++) {
@@ -46,8 +48,22 @@
                         iconColor: '#0095b6'
                     }));
             }
-            
+       
+        //    var coords = [
+        //        [55.75, 37.50], [55.75, 37.71], [55.70, 37.70]
+        //    ],
+        //        myCollection = new ymaps.GeoObjectCollection({}, {
+        //            preset: 'islands#redIcon', //all placemarks are red
+        //            draggable: false // and draggable
+        //        });
 
+        //    for (var i = 0; i < coords.length; i++) {
+        //        alert(myArrayx[i]);
+        //        myCollection.add(new ymaps.Placemark(myArrayx[i], myArrayy[i]));
+        //    }
+
+            //    myMap.geoObjects.add(myCollection);
+          
         }
 
     </script>

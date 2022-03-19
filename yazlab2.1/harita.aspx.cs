@@ -22,22 +22,66 @@ namespace yazlab2._1
     {
 
         string tarihTemp, latTemp, lngTemp, idTemp, saatTemp;
-        int sure = 30;
-        int indexTut;
+        int sure = 30, sayacVeri = 0;
+        int indexTut, indexTut2;
+        string girisSaati = "2018-10-02 18:53";
+            //DateTime.Now.ToString();
+        string girisSaati_son;
+        string[] girisSaati_saatDakika;
+
+        ArrayList tarihGirisSaati = new ArrayList();
+
 
         bool guvenlik = false;
         ArrayList tarihRedis = new ArrayList();
         ArrayList latRedis = new ArrayList();
+        string tutSaat;
+        string[] RedisTarih;
 
         protected void Button30_Click(object sender, EventArgs e)
         {
             sure = Convert.ToInt32(tb.Text);
+
+
+
+
+            for (int i = 0; i < sure; i++)
+            {
+                if (Convert.ToInt32(girisSaati_saatDakika[1]) < 10)
+                {
+                    girisSaati_saatDakika[1] = ("0" + girisSaati_saatDakika[1]).ToString();
+                }
+
+                girisSaati_son = girisSaati_saatDakika[0] + ":" + girisSaati_saatDakika[1];
+                tarihGirisSaati.Add(girisSaati_son);
+
+                girisSaati_saatDakika[1] = (Convert.ToInt32(girisSaati_saatDakika[1]) + -1).ToString();//dakika azaltma
+
+                if (Convert.ToInt32(girisSaati_saatDakika[1]) <= 0)
+                {
+                    girisSaati_saatDakika[1] = (Convert.ToInt32(girisSaati_saatDakika[1]) + 59).ToString();
+                    girisSaati_saatDakika[0] = (Convert.ToInt32(girisSaati_saatDakika[0]) - 1).ToString();//saat azaltma
+                }
+
+
+            }
+            for (int i = 0; i < sure; i++)
+            {
+                //Response.Write(tarihGirisSaati[i]+"*"+i+"*");
+            }
+
+
             Sayfa();
         }
 
-      
+
         protected void Page_Load()
         {
+            string[] girisSaati_tarihSaat = girisSaati.Split(' ');
+            girisSaati_saatDakika = girisSaati_tarihSaat[1].Split(':');
+
+
+
 
         }
 
@@ -45,15 +89,19 @@ namespace yazlab2._1
         ArrayList idRedis = new ArrayList();
         protected void Sayfa()
         {
+            HiddenField1.Value ="";
+            HiddenField2.Value ="";
             //connection redis//
-            ConnectionMultiplexer redisCon = ConnectionMultiplexer.Connect("localhost:6379");
+            ConnectionMultiplexer redisCon = ConnectionMultiplexer.Connect("localhost:6379,allowAdmin=true");
+            var server = redisCon.GetServer("localhost:6379");
             IDatabase redDb = redisCon.GetDatabase();
+            server.FlushDatabase();
             //connection redis//
 
 
             int x = Convert.ToInt32(Request.QueryString["ID"].ToString());
 
-            var streamReader = File.OpenText(@"C:\Users\ASUS\Desktop\allCars7.csv");
+            var streamReader = File.OpenText(@"C:\Users\ASUS\Desktop\allCars.csv");
             var csvReader = new CsvReader(streamReader, CultureInfo.CurrentCulture);
             ArrayList tarih = new ArrayList();
             ArrayList lat = new ArrayList();
@@ -189,62 +237,80 @@ namespace yazlab2._1
             tb.Text = z;
             //  rabbitmq
             // redis
-            for (int o = 0; o < 1079; o = o + 4)
+            for (int o = 0; o < 3867; o = o + 4)//tarihin son indexini bulup sonraki for'a gönderiyor
+                                                //yukarıdan aşağıya doğru bakmak için
             {
                 if (redDb.ListGetByIndex("title", o) == tarihTemp)
                 {
                     indexTut = o;
+                    indexTut2 = indexTut;
+
                 }
             }
-          //  if (sure == 30)
+            //  if (sure == 30)
             //{
-                for (int c = 0; c < sure; c++)
+            for (int p = 0; p < int.MaxValue; p++)
+            {
+                tutSaat = (redDb.ListGetByIndex("title", indexTut)).ToString();
+                RedisTarih = tutSaat.Split(' ');
+                for (int k = 0; k < tarihGirisSaati.Count; k++)
                 {
-                    tarihRedis.Add(redDb.ListGetByIndex("title", indexTut));
-                    indexTut++;
-                    latRedis.Add(redDb.ListGetByIndex("title", indexTut));
-                    indexTut++;
-                    lngRedis.Add(redDb.ListGetByIndex("title", indexTut));
-                    indexTut++;
-                    idRedis.Add(redDb.ListGetByIndex("title", indexTut));
-
-                    indexTut -= 7;
+                   // Response.Write("*(" + RedisTarih[1] + "*" + tarihGirisSaati[k] + ")*" + RedisTarih[1].Equals(tarihGirisSaati[k]));
+                    //Response.Write("(" + tarihGirisSaati[k] + ")");
+                    //Response.Write("_(" + RedisTarih[1] + ")_");
+                    if (RedisTarih[1].Equals(tarihGirisSaati[k]))
+                    {
+                        tarihRedis.Add(redDb.ListGetByIndex("title", indexTut));
+                        indexTut++;
+                        latRedis.Add(redDb.ListGetByIndex("title", indexTut));
+                        indexTut++;
+                        lngRedis.Add(redDb.ListGetByIndex("title", indexTut));
+                        indexTut++;
+                        idRedis.Add(redDb.ListGetByIndex("title", indexTut));
+                        sayacVeri++;
+                        indexTut -= 7;
+                    }
+                    if (sayacVeri == sure)
+                    {
+                        break;
+                    }
 
                 }
-            //}
-         /*   else if (sure == 60)
-            {
-                for (int c = 0; c < sure; c++)
+                if (sayacVeri == sure)
                 {
-
-                    tarihRedis.Add(redDb.ListGetByIndex("title", indexTut));
-                    indexTut++;
-                    latRedis.Add(redDb.ListGetByIndex("title", indexTut));
-                    indexTut++;
-                    lngRedis.Add(redDb.ListGetByIndex("title", indexTut));
-                    indexTut++;
-                    idRedis.Add(redDb.ListGetByIndex("title", indexTut));
-
-                    indexTut -= 7;
-
+                    break;
                 }
-            }
-         */
+                indexTut -= 4;
 
 
-            for (int c = 0; c < tarihRedis.Count; c++)
-            {
-                Response.Write(lngRedis[c] + "*" + c + "*");
-                Console.WriteLine("\n");
+
             }
+
+
+
+
             redisCon.Close();
             // //redis
+            int sayac = 0;
             for (int o = 0; o < latRedis.Count; o++)
             {
-                HiddenField1.Value += latRedis[o] + " ";
-                HiddenField2.Value += lngRedis[o] + " ";
-            }
+                if (idRedis[o].ToString() == x.ToString()) {
+                    if (sayac < sure)
+                    {
+                        HiddenField1.Value += latRedis[o] + " ";
+                        HiddenField2.Value += lngRedis[o] + " ";
+                     //   Response.Write(idRedis[o] + "--" + latRedis[o] + " --" + lngRedis[0] + "  ** ");
+                       // Console.WriteLine("\n");
+                        sayac++;
 
+                    }
+                  
+                }
+              
+            }
+                 
+        
+            
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
