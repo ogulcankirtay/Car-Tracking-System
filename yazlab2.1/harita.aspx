@@ -102,8 +102,8 @@ li #Button1 {
 
 
      <asp:TextBox Style="margin:15px" ID="tb" runat="server"></asp:TextBox>
-        <asp:Button ID="Button30" runat="server" OnClick="Button30_Click" Text="30 Dakika" />
-        <asp:Button ID="Button60" runat="server" OnClick="Button60_Click" Text="60 Dakika" />
+        <asp:Button ID="Button30" runat="server" OnClick="Button30_Click" Text="Dakika" />
+       
        <div id="map" style="width: 600px; height: 400px"></div>
        <asp:HiddenField ID="HiddenField1" runat="server" />
        <asp:HiddenField ID="HiddenField2" runat="server" />

@@ -31,15 +31,11 @@ namespace yazlab2._1
 
         protected void Button30_Click(object sender, EventArgs e)
         {
-            sure = 30;
+            sure = Convert.ToInt32(tb.Text);
             Sayfa();
         }
 
-        protected void Button60_Click(object sender, EventArgs e)
-        {
-            sure = 60;
-            Sayfa();
-        }
+      
         protected void Page_Load()
         {
 
@@ -200,8 +196,8 @@ namespace yazlab2._1
                     indexTut = o;
                 }
             }
-            if (sure == 30)
-            {
+          //  if (sure == 30)
+            //{
                 for (int c = 0; c < sure; c++)
                 {
                     tarihRedis.Add(redDb.ListGetByIndex("title", indexTut));
@@ -215,8 +211,8 @@ namespace yazlab2._1
                     indexTut -= 7;
 
                 }
-            }
-            else if (sure == 60)
+            //}
+         /*   else if (sure == 60)
             {
                 for (int c = 0; c < sure; c++)
                 {
@@ -233,7 +229,7 @@ namespace yazlab2._1
 
                 }
             }
-
+         */
 
 
             for (int c = 0; c < tarihRedis.Count; c++)
